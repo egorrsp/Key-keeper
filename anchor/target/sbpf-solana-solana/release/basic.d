@@ -1,0 +1,1 @@
+/Users/egorrasputin/Desktop/training-smart-contracts/project2/anchor/target/sbpf-solana-solana/release/basic.so: /Users/egorrasputin/Desktop/training-smart-contracts/project2/anchor/programs/basic/src/lib.rs

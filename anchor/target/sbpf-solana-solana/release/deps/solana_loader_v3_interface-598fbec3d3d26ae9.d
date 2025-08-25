@@ -1,0 +1,9 @@
+/Users/egorrasputin/Desktop/training-smart-contracts/project2/anchor/target/sbpf-solana-solana/release/deps/libsolana_loader_v3_interface-598fbec3d3d26ae9.rmeta: /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/lib.rs /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/instruction.rs /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/state.rs
+
+/Users/egorrasputin/Desktop/training-smart-contracts/project2/anchor/target/sbpf-solana-solana/release/deps/libsolana_loader_v3_interface-598fbec3d3d26ae9.rlib: /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/lib.rs /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/instruction.rs /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/state.rs
+
+/Users/egorrasputin/Desktop/training-smart-contracts/project2/anchor/target/sbpf-solana-solana/release/deps/solana_loader_v3_interface-598fbec3d3d26ae9.d: /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/lib.rs /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/instruction.rs /Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/state.rs
+
+/Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/lib.rs:
+/Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/instruction.rs:
+/Users/egorrasputin/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v3-interface-3.0.0/src/state.rs:
