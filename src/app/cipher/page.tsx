@@ -9,6 +9,11 @@ import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
 import {deriveKeyFromPassword, encryptSecret, decryptSecret} from './_components/cipher'
 
+type pdaEntry = {
+    password: string;
+    base_58_key: string;
+}
+
 
 export default function Page() {
     const programId = new web3.PublicKey(Idl.address)
@@ -18,7 +23,7 @@ export default function Page() {
     const [password_for_encrypting, setPassword_for_encrypting] = useState<string>("");
     const [findTitle, setFindTitle] = useState<string>("");
     const [password_for_decrypting, setPassword_for_decrypting] = useState<string>("");
-    const [pdas, setPda] = useState<string>("");
+    const [pdas, setPda] = useState<pdaEntry | null>(null);
 
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
@@ -115,9 +120,14 @@ export default function Page() {
             const msgArr   = account.message instanceof Uint8Array ? account.message : Uint8Array.from(account.message);
 
             const { key } = await deriveKeyFromPassword(password_for_decrypting, saltArr);
-
             const decrypted = await decryptSecret(Uint8Array.from(key), msgArr, nonceArr);
-            setPda(decrypted);
+
+            const summary: pdaEntry = {
+                password: decrypted,
+                base_58_key: pda.toBase58()
+            }
+
+            setPda(summary);
             setLoading2(false);
             setError("")
 
@@ -126,6 +136,28 @@ export default function Page() {
             const er = "Error creating PDA:" + err
             setLoading2(false);
 
+            setError(er);
+        }
+    };
+
+    const deletePda = async () => {
+        if (!program || !pdas || !publicKey) {
+            setError("Missing program/pdas/publicKey");
+            return;
+        }
+
+        try {
+            await program.methods
+                .deleteKey(findTitle)
+                .accounts({
+                    journalEntry: new web3.PublicKey(pdas.base_58_key),
+                    owner: publicKey,
+                })
+                .rpc();
+
+            setPda(null);
+        } catch (err) {
+            const er = "Error deleting PDA: " + err;
             setError(er);
         }
     };
@@ -173,7 +205,20 @@ export default function Page() {
                     </div>
                 </div>
                 <div>
-                    {pdas && <pre>Ваш пароль - <span className='font-bold'>{pdas}</span></pre>}
+                    {pdas && 
+                        <div className='w-full border-b border-white min-h-[75px] py-5 flex flex-col gap-2'>
+                            <pre>
+                                Ваш пароль - <span className='font-bold'>{pdas.password}</span>
+                            </pre>
+                            <div className='flex flex-row justify-between items-center'>
+                                <p>{pdas.base_58_key}</p>
+                                <button 
+                                    className='bg-red-500 text-white px-2 py-1 w-[150px] rounded-md'
+                                    onClick={() => deletePda()}
+                                    >
+                                    Удалить запись</button>
+                            </div>
+                        </div>}
                 </div>
             </div>
             {flag && (

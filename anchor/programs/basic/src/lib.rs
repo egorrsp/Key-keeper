@@ -58,11 +58,11 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(title:String)]
+#[instruction(seed:Vec<u8>)]
 pub struct Close<'info>{
     #[account(
         mut,
-        seeds=[title.as_bytes(), owner.key().as_ref()],
+        seeds= [title.as_bytes(), owner.key().as_ref()],
         bump,
         close = owner,
         constraint = journal_entry.owner == owner.key() @ ErrorCode::Unauthorized
