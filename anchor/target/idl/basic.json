@@ -8,6 +8,48 @@
   },
   "instructions": [
     {
+      "name": "delete_key",
+      "discriminator": [
+        109,
+        187,
+        83,
+        65,
+        222,
+        57,
+        126,
+        251
+      ],
+      "accounts": [
+        {
+          "name": "journal_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "title"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "_title",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "initialize",
       "discriminator": [
         175,
@@ -53,7 +95,25 @@
         },
         {
           "name": "message",
-          "type": "string"
+          "type": "bytes"
+        },
+        {
+          "name": "salt",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "nonce",
+          "type": {
+            "array": [
+              "u8",
+              12
+            ]
+          }
         }
       ]
     }
@@ -73,6 +133,13 @@
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "Unauthorized",
+      "msg": "You are not the owner of this account"
+    }
+  ],
   "types": [
     {
       "name": "JournalEntreState",
@@ -89,7 +156,25 @@
           },
           {
             "name": "message",
-            "type": "string"
+            "type": "bytes"
+          },
+          {
+            "name": "salt",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": {
+              "array": [
+                "u8",
+                12
+              ]
+            }
           }
         ]
       }

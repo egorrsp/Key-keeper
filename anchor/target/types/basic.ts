@@ -14,6 +14,48 @@ export type Basic = {
   },
   "instructions": [
     {
+      "name": "deleteKey",
+      "discriminator": [
+        109,
+        187,
+        83,
+        65,
+        222,
+        57,
+        126,
+        251
+      ],
+      "accounts": [
+        {
+          "name": "journalEntry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "title"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "initialize",
       "discriminator": [
         175,
@@ -59,7 +101,25 @@ export type Basic = {
         },
         {
           "name": "message",
-          "type": "string"
+          "type": "bytes"
+        },
+        {
+          "name": "salt",
+          "type": {
+            "array": [
+              "u8",
+              16
+            ]
+          }
+        },
+        {
+          "name": "nonce",
+          "type": {
+            "array": [
+              "u8",
+              12
+            ]
+          }
         }
       ]
     }
@@ -79,6 +139,13 @@ export type Basic = {
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "unauthorized",
+      "msg": "You are not the owner of this account"
+    }
+  ],
   "types": [
     {
       "name": "journalEntreState",
@@ -95,7 +162,25 @@ export type Basic = {
           },
           {
             "name": "message",
-            "type": "string"
+            "type": "bytes"
+          },
+          {
+            "name": "salt",
+            "type": {
+              "array": [
+                "u8",
+                16
+              ]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": {
+              "array": [
+                "u8",
+                12
+              ]
+            }
           }
         ]
       }
