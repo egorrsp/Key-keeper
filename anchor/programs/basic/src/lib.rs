@@ -30,6 +30,12 @@ pub mod basic {
     pub fn delete_key(_ctx: Context<Close>, _title: String) -> Result<()> {
         Ok(())
     }
+
+    pub fn update_key(ctx: Context<Update>, _title: String, message: Vec<u8>) -> Result<()> {
+        let context = &mut ctx.accounts.journal_entry;
+        context.message = message;
+        Ok(())
+    }
 }
 
 #[account]
@@ -58,7 +64,22 @@ pub struct Initialize<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(seed:Vec<u8>)]
+#[instruction(title: String)]
+pub struct Update<'info> {
+    #[account(
+        mut,
+        seeds = [title.as_bytes(), owner.key().as_ref()],
+        bump,
+        constraint = journal_entry.owner == owner.key() @ ErrorCode::Unauthorized
+    )]
+    pub journal_entry: Account<'info, JournalEntreState>,
+    #[account(mut)]
+    pub owner: Signer<'info>,
+    pub system_program: Program<'info, System>
+}
+
+#[derive(Accounts)]
+#[instruction(title: String)]
 pub struct Close<'info>{
     #[account(
         mut,
