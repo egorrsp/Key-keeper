@@ -28,7 +28,11 @@ export default function Page() {
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
     const [error, setError] = useState<string>("");
+
     const [pdaKey, setPdaKey] = useState<string>("");
+
+    const [isInUpdating, setIsInUpdating] = useState<boolean>(false);
+    const [newMessage, setNewMessage] = useState<string>("");
 
     const {publicKey, wallet, connected} = useWallet();
     const connection = new Connection("http://127.0.0.1:8899", "confirmed");
@@ -162,6 +166,45 @@ export default function Page() {
         }
     };
 
+    const updatePda = async () => {
+        if (!program || !publicKey || !findTitle || !password_for_decrypting || !newMessage) {
+            setError("Program/wallet/password/title missing");
+            setLoading2(false);
+            return;
+        }
+
+        const [pda] = web3.PublicKey.findProgramAddressSync(
+            [new TextEncoder().encode(findTitle), publicKey.toBuffer()], 
+            program.programId
+        )
+
+        const account = await program.account.journalEntreState.fetch(pda);
+
+        const saltArr = account.salt instanceof Uint8Array ? account.salt : Uint8Array.from(account.salt);
+        const nonceArr = account.nonce instanceof Uint8Array ? account.nonce : Uint8Array.from(account.nonce);
+        const msgArr   = account.message instanceof Uint8Array ? account.message : Uint8Array.from(account.message);
+        const { key } = await deriveKeyFromPassword(password_for_decrypting, saltArr);
+        const encrypted = await encryptSecret(Uint8Array.from(key), newMessage);
+        try{
+            await program.methods
+            .updateKey(findTitle, Buffer.from(encrypted.ciphertext), Buffer.from(encrypted.nonce))
+            .accounts({
+                journalEntry: pda,
+                owner: publicKey,
+                systemProgram: web3.SystemProgram.programId
+            })
+            .rpc()
+            setError("")
+
+            await findPdas()
+            setIsInUpdating(false)
+
+        } catch (err) {
+            const er = "Error updating PDA: " + err;
+            setError(er)
+        }
+    }
+
     const [flag, setFlag] = useState(false);
 
     useEffect(() => {
@@ -207,16 +250,44 @@ export default function Page() {
                 <div>
                     {pdas && 
                         <div className='w-full border-b border-white min-h-[75px] py-5 flex flex-col gap-2'>
-                            <pre>
-                                Ваш пароль - <span className='font-bold'>{pdas.password}</span>
-                            </pre>
-                            <div className='flex flex-row justify-between items-center'>
-                                <p>{pdas.base_58_key}</p>
+                            {isInUpdating ? (
+                                <div className='flex flex-row items-center gap-1'>
+                                    <pre>Ваш пароль - </pre>
+                                    <input 
+                                        onChange={(e) => setNewMessage(e.target.value)}
+                                        className='border border-white rounded-md px-2 py-1'
+                                    />
+                                </div>
+                            ) : (
+                                <pre>
+                                    Ваш пароль - <span className='font-bold'>{pdas.password}</span>
+                                </pre>
+                            )}
+                            <p>{pdas.base_58_key}</p>
+                            <div className='flex flex-row justify-between items-center gap-3'>
+
                                 <button 
-                                    className='bg-red-500 text-white px-2 py-1 w-[150px] rounded-md'
-                                    onClick={() => deletePda()}
+                                    className='border border-white text-white px-2 py-1 w-2/3 rounded-md'
+                                    onClick={() => setIsInUpdating(!isInUpdating)}
+                                >
+                                    {isInUpdating ? "Отмена" : "Редактировать"}
+                                </button>
+
+                                {isInUpdating ? (
+                                    <button 
+                                        className='bg-green-700 text-white px-2 py-[6px] w-1/3 rounded-md'
+                                        onClick={() => updatePda()}
                                     >
-                                    Удалить запись</button>
+                                        Применить
+                                    </button>
+                                ) : (
+                                    <button 
+                                        className='bg-red-500 text-white px-2 py-[6px] w-1/3 rounded-md'
+                                        onClick={() => deletePda()}
+                                    >
+                                        Удалить запись
+                                    </button>
+                                )}
                             </div>
                         </div>}
                 </div>

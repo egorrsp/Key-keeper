@@ -116,6 +116,65 @@
           }
         }
       ]
+    },
+    {
+      "name": "update_key",
+      "discriminator": [
+        11,
+        31,
+        111,
+        99,
+        157,
+        42,
+        106,
+        51
+      ],
+      "accounts": [
+        {
+          "name": "journal_entry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "arg",
+                "path": "title"
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_title",
+          "type": "string"
+        },
+        {
+          "name": "message",
+          "type": "bytes"
+        },
+        {
+          "name": "nonce",
+          "type": {
+            "array": [
+              "u8",
+              12
+            ]
+          }
+        }
+      ]
     }
   ],
   "accounts": [

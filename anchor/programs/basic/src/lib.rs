@@ -31,9 +31,10 @@ pub mod basic {
         Ok(())
     }
 
-    pub fn update_key(ctx: Context<Update>, _title: String, message: Vec<u8>) -> Result<()> {
+    pub fn update_key(ctx: Context<Update>, _title: String, message: Vec<u8>, nonce: [u8; 12]) -> Result<()> {
         let context = &mut ctx.accounts.journal_entry;
         context.message = message;
+        context.nonce = nonce;
         Ok(())
     }
 }
