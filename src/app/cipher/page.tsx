@@ -14,7 +14,6 @@ type pdaEntry = {
     base_58_key: string;
 }
 
-
 export default function Page() {
     const programId = new web3.PublicKey(Idl.address)
 
